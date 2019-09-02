@@ -1,5 +1,11 @@
-library(tidyverse)
-
+#' Read GEDCOM
+#'
+#' This function allows you to read gedcom files into csv format.
+#' @param filepath
+#' @keywords gedcom
+#' @export
+#' @examples
+#' read_gedcom()
 read_gedcom <- function(file_path) {
   file <- read_delim(file_path, '\n', "\n\n", col_names = FALSE)
   start_recording <- FALSE
