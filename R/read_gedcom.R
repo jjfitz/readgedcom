@@ -27,26 +27,19 @@ read_gedcom <- function(file_path) {
 
   dfTemp <- data.frame(matrix(nrow=1, ncol=14))
   names(dfTemp) <- c("id", "firstname","lastname","birthdate", "birthplace",
-                     "birthlat", "birthlong", "deathlat", "deathlong", "deathdate",
-                     "deathplace", "sex", "FAMC", "FAMS")
+                     "birthlat", "birthlong", "deathdate", "deathplace",
+                     "deathlat", "deathlong", "sex", "FAMC", "FAMS")
 
   for (i in 1:length(file[1][[1]])) {
     tmpv <- file[1][[1]][[i]]
-    # print(tmpv)
-    # if(str_detect(tmpv, "@ INDI") && id == NA) {
-    #   start_recording <-TRUE
-    # }
-    # print(tmpv)
-    # if(start_recording) {
+
     if(str_detect(tmpv, "@ INDI")) {
-      # if (fams != NA || (is_first == 1 && famc != NA)) {
-      # print(cont)
       line.to.write <- data_frame(id, firstname, lastname, birthdate, birthplace,
-                                  birthlat, birthlong, deathlat, deathlong,
-                                  deathdate, deathplace, sex, famc, fams)
+                                  birthlat, birthlong, deathdate, deathplace,
+                                  deathlat, deathlong, sex, famc, fams)
       names(line.to.write) <- c("id", "firstname","lastname","birthdate", "birthplace",
-                                "birthlat", "birthlong", "deathlat", "deathlong",
-                                "deathdate", "deathplace","sex","FAMC", "FAMS")
+                                "birthlat", "birthlong", "deathdate", "deathplace",
+                                "deathlat", "deathlong", "sex","FAMC", "FAMS")
       dfTemp <- rbind(dfTemp, line.to.write)
       birthdate <-  NA
       birthplace <-  NA
@@ -61,15 +54,14 @@ read_gedcom <- function(file_path) {
       sex <- NA
       famc <- NA
       fams <- NA
-      # }
-      id <- str_extract(tmpv,"@.+@")
-      # is_first <- is_first + 1
+
+      id <- str_extract(tmpv,"(?<=@.)\\d*(?=@)")
       next
     }
 
     if(str_detect(tmpv, " NAME")) {
       firstname <- str_extract(tmpv,"(?<=NAME ).+(?= /+.)")
-      lastname <- str_extract(tmpv,"(?<=/).+/")
+      lastname <- str_extract(tmpv,"(?<=/).+(?=/)")
       next
     }
 
@@ -95,21 +87,28 @@ read_gedcom <- function(file_path) {
     }
 
     if(str_detect(tmpv, " FAMC")) {
-      famc <- str_extract(tmpv,"@.+@")
+      famc <- str_extract(tmpv,"(?<=@.)\\d*(?=@)")
       next
     }
 
     if(str_detect(tmpv, " FAMS")) {
-      fams <- paste0(fams, " ", str_extract(tmpv,"@.+@"))
+      fams <- paste0(fams, " ", str_extract(tmpv,"(?<=@.)\\d*(?=@)"))
     }
-
-    # if (!IsDateTime(file[1][[1]][[i]])) {
-    #   ctemp <- file[1][[1]][[i]]
-    #   cont <- paste0(cont, " ", ctemp)
-    # }
-    # }
   }
-  return(as_tibble(dfTemp))
+
+  dfTemp <- as_tibble(dfTemp)
+
+  dfTemp$FAMS <- gsub("NA ", "", dfTemp$FAMS)
+
+  dfTemp <- dfTemp %>%
+    filter(!is.na(id)) %>%
+    mutate(birthlat = as.numeric(birthlat),
+           birthlong = as.numeric(birthlong),
+           deathlat = as.numeric(deathlat),
+           deathlong = as.numeric(deathlong)
+    )
+
+  return(dfTemp)
 }
 
 
