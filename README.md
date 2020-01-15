@@ -11,3 +11,12 @@ I also found this script to get a GEDCOM file off of FamilySearch:
 https://github.com/Linekio/getmyancestors
 
 There are also many sites that offer free GEDCOM files for celebrities/royalty/etc. 
+
+You can start using this package by using:
+```
+# install.packages("devtools")
+devtools::install_github("jjfitz/readgedcom")
+```
+
+Here is also an article that I wrote with exploring my family history:
+https://jasonfitzgerald.netlify.com/2019/09/how-far-does-the-apple-fall/
