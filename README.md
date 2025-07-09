@@ -19,4 +19,4 @@ devtools::install_github("jjfitz/readgedcom")
 ```
 
 Here is also an article that I wrote with exploring my family history:
-https://jasonfitzgerald.netlify.com/2019/09/how-far-does-the-apple-fall/
+https://jjfitz.github.io/projects/Genealogy.html
