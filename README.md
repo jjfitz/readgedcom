@@ -19,4 +19,4 @@ devtools::install_github("jjfitz/readgedcom")
 ```
 
 Here is also an article that I wrote with exploring my family history:
-https://jjfitz.github.io/projects/reading-gedcom-files-r.html
+https://jjfitz.github.io/posts/reading-gedcom-files-r/
